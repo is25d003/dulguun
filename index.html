@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Car Dodge Game</title>
+
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #game {
+      width: 300px;
+      height: 500px;
+      border: 2px solid black;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .car {
+      width: 50px;
+      height: 80px;
+      position: absolute;
+      bottom: 10px;
+      left: 125px;
+      background: red;
+    }
+
+    .enemy {
+      width: 50px;
+      height: 80px;
+      position: absolute;
+      top: -100px;
+      background: blue;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game">
+    <div id="player" class="car"></div>
+  </div>
+
+  <script>
+    const game = document.getElementById("game");
+    const player = document.getElementById("player");
+
+    let playerLeft = 125;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" && playerLeft > 0) {
+        playerLeft -= 20;
+      }
+      if (e.key === "ArrowRight" && playerLeft < 250) {
+        playerLeft += 20;
+      }
+      player.style.left = playerLeft + "px";
+    });
+
+    function createEnemy() {
+      const enemy = document.createElement("div");
+      enemy.classList.add("enemy");
+      enemy.style.left = Math.floor(Math.random() * 250) + "px";
+      game.appendChild(enemy);
+
+      let enemyTop = -100;
+
+      const move = setInterval(() => {
+        enemyTop += 5;
+        enemy.style.top = enemyTop + "px";
+
+        const enemyLeft = enemy.offsetLeft;
+        const playerTop = player.offsetTop;
+
+        if (
+          enemyTop + 80 >= playerTop &&
+          enemyLeft < playerLeft + 50 &&
+          enemyLeft + 50 > playerLeft
+        ) {
+          alert("Game Over");
+          location.reload();
+        }
+
+        if (enemyTop > 500) {
+          enemy.remove();
+          clearInterval(move);
+        }
+      }, 20);
+    }
+
+    setInterval(createEnemy, 1500);
+  </script>
+
+</body>
+</html>
